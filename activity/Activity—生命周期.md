@@ -38,34 +38,36 @@
 
 ​	Activity在这时**可见**，当用户按Home键切换到桌面后又切回来或者从后一个Activity切回前一个Activity就会触发这个方法。这里一般不做什么操作。
 
-#### 2、各个生命周期的区别
+### 2、各个生命周期的区别
 
-### onCreate和onStart之间有什么区别？
+- ### onCreate和onStart之间有什么区别？
 
 （1）可见与不可见的区别。前者不可见，后者可见。
 （2）执行次数的区别。onCreate方法只在Activity创建时执行**一次**，而onStart方法在Activity的切换以及按Home键返回桌面再切回应用的过程中被多次调用。因此**Bundle数据的恢复在onStart中进行比onCreate中执行更合适**。
 （3）onCreate能做的事onStart其实都能做，但是onstart能做的事onCreate却未必适合做。如前文所说的，setContentView和资源初始化在两者都能做，然而想动画的初始化在onStart中做比较好。
 
-### onStart方法和onResume方法有什么区别？
+- ### onStart方法和onResume方法有什么区别？
 
 （1）是否在前台。onStart方法中Activity可见但不在前台，不可交互，而在onResume中在前台。
 （2）职责不同，onStart方法中主要还是进行初始化工作，而onResume方法，根据官方的建议，可以做开启动画和独占设备的操作。
 
-### onPause方法和onStop方法有什么区别？
+- ### onPause方法和onStop方法有什么区别？
 
 （1）是否可见。onPause时Activity可见，onStop时Activity不可见，**但Activity对象还在内存中**。
 （2）在系统内存不足的时候可能不会执行onStop方法，因此程序状态的保存、独占设备和动画的关闭、以及一些数据的保存最好在onPause中进行，但要注意不能太耗时。
 
-### onStop方法和onDestroy方法有什么区别？
+- ### onStop方法和onDestroy方法有什么区别？
 
 onStop阶段Activity还没有被销毁，对象还在内存中，此时可以通过切换Activity再次回到该Activity，而onDestroy阶段Acivity被销毁
 
-### 6.为什么切换Activity时各方法的执行次序是(A)onPause→(B)onCreate→(B)onStart→(B)onResume→(A)onStop而不是(A)onPause→(A)onStop→(B)onCreate→(B)onStart→(B)onResume
+- ### 切换Activity时各方法的执行次序
+
+(A)onPause→(B)onCreate→(B)onStart→(B)onResume→(A)onStop而不是(A)onPause→(A)onStop→(B)onCreate→(B)onStart→(B)onResume
 
 （1）一个Activity或多或少会占有系统资源，而在官方的建议中，onPause方法将会释放掉很多系统资源，为切换Activity提供流畅性的保障，而不需要再等多两个阶段，这样做切换更快。
 （2）按照生命周期图的表示，如果用户在切换Activity的过程中再次切回原Activity，是在onPause方法后直接调用onResume方法的，这样比onPause→onStop→onRestart→onStart→onResume要快得多。
 
-### onSaveInstanceState和onRestoreInstanceState
+- ### onSaveInstanceState和onRestoreInstanceState
 
 #### **onSaveInstanceState**
 
