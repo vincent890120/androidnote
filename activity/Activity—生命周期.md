@@ -89,193 +89,100 @@ onStop阶段Activity还没有被销毁，对象还在内存中，此时可以通
 
 ### 三、具体过程
 
-`package com.scott.lifecycle;`  
-
-  
-
+```
 import android.app.Activity;  
-
 import android.content.res.Configuration;  
-
 import android.os.Bundle;  
-
 import android.util.Log;  
-
-  
-
-public class OrientationActivity extends Activity {  
-
-​      
-
-​    private static final String TAG = "OrientationActivity";  
-
-​    private int param = 1;  
-
-​      
-
-​    @Override  
-
-​    protected void onCreate(Bundle savedInstanceState) {  
-
-​        super.onCreate(savedInstanceState);  
-
-​        setContentView(R.layout.orientation_portrait);  
-
-​        Log.i(TAG, "onCreate called.");  
-
-​    }  
-
-​      
-
-​    @Override  
-
-​    protected void onStart() {  
-
-​        super.onStart();  
-
-​        Log.i(TAG, "onStart called.");  
-
-​    }  
-
-​      
-
-​    @Override  
-
-​    protected void onRestart() {  
-
-​        super.onRestart();  
-
-​        Log.i(TAG, "onRestart called.");  
-
-​    }  
-
-​      
-
-​    @Override  
-
-​    protected void onResume() {  
-
-​        super.onResume();  
-
-​        Log.i(TAG, "onResume called.");  
-
-​    }  
-
-​      
-
-​    @Override  
-
-​    protected void onPause() {  
-
-​        super.onPause();  
-
-​        Log.i(TAG, "onPause called.");  
-
-​    }  
-
-​      
-
-​    @Override  
-
-​    protected void onStop() {  
-
-​        super.onStop();  
-
-​        Log.i(TAG, "onStop called.");  
-
-​    }  
-
-​      
-
-​    @Override  
-
-​    protected void onDestroy() {  
-
-​        super.onDestroy();  
-
-​        Log.i(TAG, "onDestory called.");  
-
-​    }  
-
-  
-
-​    @Override  
-
-​    protected void onSaveInstanceState(Bundle outState) {  
-
-​        outState.putInt("param", param);  
-
-​        Log.i(TAG, "onSaveInstanceState called. put param: " + param);  
-
-​        super.onSaveInstanceState(outState);  
-
-​    }  
-
-​      
-
-​    @Override  
-
-​    protected void onRestoreInstanceState(Bundle savedInstanceState) {  
-
-​        param = savedInstanceState.getInt("param");  
-
-​        Log.i(TAG, "onRestoreInstanceState called. get param: " + param);  
-
-​        super.onRestoreInstanceState(savedInstanceState);  
-
-​    }  
-
-​      
-
-​    //当指定了android:configChanges="orientation"后,方向改变时onConfigurationChanged被调用  
-
-​    @Override  
-
-​    public void onConfigurationChanged(Configuration newConfig) {  
-
-​        super.onConfigurationChanged(newConfig);  
-
-​        Log.i(TAG, "onConfigurationChanged called.");  
-
-​        switch (newConfig.orientation) {  
-
-​        case Configuration.ORIENTATION_PORTRAIT:  
-
-​            setContentView(R.layout.orientation_portrait);  
-
-​            break;  
-
-​        case Configuration.ORIENTATION_LANDSCAPE:  
-
-​            setContentView(R.layout.orientation_landscape);  
-
-​            break;  
-
-​        } 
-
-​    }  
-
-`}`  
-
-1.启动Activity：
+public class LifeCycleActivity extends Activity {  
+    private static final String TAG = "OrientationActivity";  
+    private int param = 1;  
+    @Override  
+    protected void onCreate(Bundle savedInstanceState) {  
+        super.onCreate(savedInstanceState);  
+        setContentView(R.layout.orientation_portrait);  
+        Log.i(TAG, "onCreate called.");  
+    }  
+    @Override  
+    protected void onStart() {  
+        super.onStart();  
+        Log.i(TAG, "onStart called.");  
+    }  
+    @Override  
+    protected void onRestart() {  
+        super.onRestart();  
+        Log.i(TAG, "onRestart called.");  
+    }  
+    @Override  
+    protected void onResume() {  
+        super.onResume();  
+        Log.i(TAG, "onResume called.");  
+    }  
+    @Override  
+    protected void onPause() {  
+        super.onPause();  
+        Log.i(TAG, "onPause called.");  
+    }  
+    @Override  
+    protected void onStop() {  
+        super.onStop();  
+        Log.i(TAG, "onStop called.");  
+    }  
+    @Override  
+    protected void onDestroy() {  
+        super.onDestroy();  
+        Log.i(TAG, "onDestory called.");  
+    }  
+    @Override  
+    protected void onSaveInstanceState(Bundle outState) {  
+        outState.putInt("param", param);  
+        Log.i(TAG, "onSaveInstanceState called. put param: " + param);  
+        super.onSaveInstanceState(outState);  
+    }  
+    @Override  
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {  
+        param = savedInstanceState.getInt("param");  
+        Log.i(TAG, "onRestoreInstanceState called. get param: " + param);  
+        super.onRestoreInstanceState(savedInstanceState);  
+    }  
+    //当指定了android:configChanges="orientation"后,方向改变时onConfigurationChanged被调用  
+    @Override  
+    public void onConfigurationChanged(Configuration newConfig) {  
+        super.onConfigurationChanged(newConfig);  
+        Log.i(TAG, "onConfigurationChanged called.");  
+        switch (newConfig.orientation) {  
+        case Configuration.ORIENTATION_PORTRAIT:  
+            setContentView(R.layout.orientation_portrait);  
+            break;  
+        case Configuration.ORIENTATION_LANDSCAPE:  
+            setContentView(R.layout.orientation_landscape);  
+            break;  
+        } 
+    }  
+}  
+```
+
+**1.启动Activity：**
 
 ![](<image/activitylife1.png>)
 
 在系统调用了onCreate和onStart之后，调用了onResume，自此，Activity进入了运行状态。
 
-2.跳转到其他Activity，或按下Home键回到主屏：
+**2.跳转到其他Activity，或按下Home键回到主屏：**
 
 ![](<image/activitylife2.gif>)
 
 我们看到，此时onSaveInstanceState方法在onPause之前被调用了，并且注意，退居后台时，onPause后onStop相继被调用。
 
-3.从后台回到前台：
+**3.从后台回到前台：**
 
 ![](<image/activitylife3.gif>)
 
 当从后台会到前台时，系统先调用onRestart方法，然后调用onStart方法，最后调用onResume方法，Activity又进入了运行状态。
 
-4.修改TargetActivity在AndroidManifest.xml中的配置，将android:theme属性设置为@android:style/Theme.Dialog，然后再点击LifeCycleActivity中的按钮，跳转行为就变为了TargetActivity覆盖到LifeCycleActivity之上了，此时调用的方法为：
+**4.其他activity覆盖**
+
+修改TargetActivity在AndroidManifest.xml中的配置，将android:theme属性设置为@android:style/Theme.Dialog，然后再点击LifeCycleActivity中的按钮，跳转行为就变为了TargetActivity覆盖到LifeCycleActivity之上了，此时调用的方法为：
 
 ![](<image/activitylife4.gif>)
 
@@ -283,13 +190,15 @@ public class OrientationActivity extends Activity {
 
 我们注意到，此时LifeCycleActivity的OnPause方法被调用，并没有调用onStop方法，因为此时的LifeCycleActivity没有退居后台，只是被覆盖或被锁屏；onSaveInstanceState会在onPause之前被调用。
 
-5.按回退键使LifeCycleActivity从被覆盖回到前面，或者按解锁键解锁屏幕：
+**5.按回退键**
+
+使LifeCycleActivity从被覆盖回到前面，或者按解锁键解锁屏幕：
 
 ![](<image/activitylife5.gif>)
 
 此时只有onResume方法被调用，直接再次进入运行状态。
 
-6.退出：
+**6.退出：**
 
 ![](<image/activitylife6.gif>)
 
@@ -297,7 +206,7 @@ public class OrientationActivity extends Activity {
 
 大家似乎注意到，在所有的过程中，并没有onRestoreInstanceState的出现，这个并不奇怪，因为之前我们就说过，onRestoreInstanceState只有在杀死不在前台的Activity之后用户回到此Activity，或者用户改变屏幕方向的这两个重建过程中被调用。我们要演示第一种情况比较困难，我们可以结合第二种情况演示一下具体过程。顺便也向大家讲解一下屏幕方向改变的应对策略。
 
-7.旋转屏幕
+**7.旋转屏幕**
 
 ![](<image/activitylife7.gif>)
 
@@ -309,10 +218,7 @@ public class OrientationActivity extends Activity {
 
 可以看到，每次旋转方向时，只有onConfigurationChanged方法被调用，没有了销毁重建的过程。
 
-以下是需要注意的几点：
+注意：如果<activity>配置了android:screenOrientation属性，则会使android:configChanges="orientation"失效。
 
-1.如果<activity>配置了android:screenOrientation属性，则会使android:configChanges="orientation"失效。
 
-2.模拟器与真机差别很大：模拟器中如果不配置android:configChanges属性或配置值为orientation，切到横屏执行一次销毁->重建，切到竖屏执行两次。真机均为一次。模拟器中如果配置android:configChanges="orientation|keyboardHidden"（如果是Android4.0，则是"orientation|keyboardHidden|screenSize"），切竖屏执行一次onConfigurationChanged，切横屏执行两次。真机均为一次。
 
-Activity的生命周期与程序的健壮性有着密不可分的关系，希望朋友们能够认真体会、熟练应用。
